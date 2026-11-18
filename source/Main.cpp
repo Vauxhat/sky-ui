@@ -63,6 +63,8 @@
 #include <shlobj.h>
 #pragma comment(lib, "shell32.lib")
 
+#include <algorithm>
+
 #include "GInputAPI.h"
 
 //#include "SkyUIAPI.h"
@@ -626,11 +628,11 @@ public:
         float bottomOffset = (58.0f);
         float leftRightOffset = (16.0f);
 
-        tempBackgroundPoly.x1 = (x - halfw + leftRightOffset - ScaleX(plugin::Random(-me / 2, me / 2)));  tempBackgroundPoly.x2 = (x + halfw - leftRightOffset + ScaleX(plugin::Random(-me / 2, me / 2)));
-        tempBackgroundPoly.y1 = (y - halfh + topOffset - ScaleY(plugin::Random(-me / 2, me / 2)));  tempBackgroundPoly.y2 = (y - halfh + topOffset - ScaleY(plugin::Random(-me / 2, me / 2)));
+        tempBackgroundPoly.x1 = (x - halfw + leftRightOffset - ScaleX(plugin::RandomNumberInRange(-me / 2.f, me / 2.f)));  tempBackgroundPoly.x2 = (x + halfw - leftRightOffset + ScaleX(plugin::RandomNumberInRange(-me / 2.f, me / 2.f)));
+        tempBackgroundPoly.y1 = (y - halfh + topOffset - ScaleY(plugin::RandomNumberInRange(-me / 2.f, me / 2.f)));  tempBackgroundPoly.y2 = (y - halfh + topOffset - ScaleY(plugin::RandomNumberInRange(-me / 2.f, me / 2.f)));
 
-        tempBackgroundPoly.x3 = (x - halfw + leftRightOffset - ScaleX(plugin::Random(-me / 2, me / 2)));  tempBackgroundPoly.x4 = (596.0f);
-        tempBackgroundPoly.y3 = (y + halfh - bottomOffset + ScaleY(plugin::Random(-me / 2, me / 2)));  tempBackgroundPoly.y4 = (366.0f);
+        tempBackgroundPoly.x3 = (x - halfw + leftRightOffset - ScaleX(plugin::RandomNumberInRange(-me / 2.f, me / 2.f)));  tempBackgroundPoly.x4 = (596.0f);
+        tempBackgroundPoly.y3 = (y + halfh - bottomOffset + ScaleY(plugin::RandomNumberInRange(-me / 2.f, me / 2.f)));  tempBackgroundPoly.y4 = (366.0f);
 
         updateBackPoly = false;
     }
@@ -641,11 +643,11 @@ public:
 
         const float me = 8.0f;
 
-        tempItemPoly.x1 = (x - halfw - ScaleX(plugin::Random(-me / 2, me / 2)));  tempItemPoly.x2 = (x + halfw + ScaleX(plugin::Random(-me / 2, me / 2)));
-        tempItemPoly.y1 = (y - halfh - ScaleY(plugin::Random(-me / 2, me / 2)));  tempItemPoly.y2 = (y - halfh - ScaleY(plugin::Random(-me / 2, me / 2)));
+        tempItemPoly.x1 = (x - halfw - ScaleX(plugin::RandomNumberInRange(-me / 2.f, me / 2.f)));  tempItemPoly.x2 = (x + halfw + ScaleX(plugin::RandomNumberInRange(-me / 2.f, me / 2.f)));
+        tempItemPoly.y1 = (y - halfh - ScaleY(plugin::RandomNumberInRange(-me / 2.f, me / 2.f)));  tempItemPoly.y2 = (y - halfh - ScaleY(plugin::RandomNumberInRange(-me / 2.f, me / 2.f)));
 
-        tempItemPoly.x3 = (x - halfw - ScaleX(plugin::Random(-me / 2, me / 2)));  tempItemPoly.x4 = (x + halfw + ScaleX(plugin::Random(-me / 2, me / 2)));
-        tempItemPoly.y3 = (y + halfh + ScaleY(plugin::Random(-me / 2, me / 2)));  tempItemPoly.y4 = (y + halfh + ScaleY(plugin::Random(-me / 2, me / 2)));
+        tempItemPoly.x3 = (x - halfw - ScaleX(plugin::RandomNumberInRange(-me / 2.f, me / 2.f)));  tempItemPoly.x4 = (x + halfw + ScaleX(plugin::RandomNumberInRange(-me / 2.f, me / 2.f)));
+        tempItemPoly.y3 = (y + halfh + ScaleY(plugin::RandomNumberInRange(-me / 2.f, me / 2.f)));  tempItemPoly.y4 = (y + halfh + ScaleY(plugin::RandomNumberInRange(-me / 2.f, me / 2.f)));
 
         updateItemPoly = false;
     }
@@ -1315,6 +1317,7 @@ public:
                 }
             }
 
+#ifdef GTA3
             if (_this->m_nCurrentMenuPage == MENUPAGE_STATS && GetCheckHoverForStandardInput(_this)) {
                 if (GetLMBPressed())
                     statsScrollY -= _this->m_nMouseOldPosY - _this->m_nMousePosY;
@@ -1336,6 +1339,7 @@ public:
                         statsScrollY = 280.0f;
                 }
             }
+#endif
         }
         else {
             if (_this->m_nCurrentMenuPage == MENUPAGE_STATS)
@@ -1532,7 +1536,11 @@ public:
                     _this->m_nPrefsLanguage = 0;
 
                 _this->m_bFrontEnd_ReloadObrTxtGxt = true;
+#ifdef GTA3
                 _this->InitialiseChangedLanguageSettings();
+#elif GTASA
+                _this->InitialiseChangedLanguageSettings(false);
+#endif
                 SaveSettings();
                 return 1;
             default:
@@ -1856,7 +1864,7 @@ public:
         CFont::SetOrientation(ALIGN_LEFT);
 
         uint32_t i = 0;
-        bool orientRight = false;
+        bool orientRight = true;
         for (auto& it : helpTexts) {
             if (!it.empty()) {
                 auto str = textLoader.Get(it.c_str());
@@ -1954,7 +1962,9 @@ public:
     }
 
     static inline void DrawStats(CMenuManager* _this) {
+#if defined(GTA3)
         int32_t numLines = _this->CostructStatLine(99999);
+#endif
 
         CFont::SetBackground(false);
         CFont::SetProportional(true);
@@ -1967,6 +1977,7 @@ public:
         const float startY = crimRaY + 24.0f;
         const float endY = DEFAULT_SCREEN_HEIGHT - (startY + (spacing * 2));
 
+#ifdef GTA3
         for (int32_t i = 1; i < numLines; i++) {
             _this->CostructStatLine(i);
 
@@ -1982,6 +1993,7 @@ public:
             CFont::SetOrientation(ALIGN_RIGHT);
             CFont::PrintString(SCREEN_WIDTH - ScaleX(40.0f + GetMenuOffsetX()), ScaleY(y), gUString2);
         }
+#endif
 
         CFont::SetColor(CRGBA(225, 225, 225, GetAlpha(255)));
         CFont::SetDropColor(CRGBA(0, 0, 0, GetAlpha(255)));
@@ -4475,8 +4487,8 @@ public:
 
         auto drawBriefs = [](float, float y, wchar_t* str) {
             CFont::SetWrapx(ScaleXKeepCentered(DEFAULT_SCREEN_WIDTH - 82.0f + GetMenuOffsetX()));
-            CFont::Details.m_Color.a = min(CFont::Details.m_Color.a, GetAlpha());
-            CFont::Details.m_DropColor.a = min(CFont::Details.m_DropColor.a, GetAlpha());
+            CFont::Details.m_Color.a = std::min((uint32_t)CFont::Details.m_Color.a, GetAlpha());
+            CFont::Details.m_DropColor.a = std::min((uint32_t)CFont::Details.m_DropColor.a, GetAlpha());
 
 #if defined(GTA3) && defined(LC01)
             SetLCSFontStyle();
