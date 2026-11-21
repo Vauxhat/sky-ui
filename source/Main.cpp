@@ -1535,7 +1535,10 @@ public:
                 if (_this->m_nPrefsLanguage > 4)
                     _this->m_nPrefsLanguage = 0;
 
+#ifdef GTA3 || GTAVC
                 _this->m_bFrontEnd_ReloadObrTxtGxt = true;
+#endif
+
 #ifdef GTA3
                 _this->InitialiseChangedLanguageSettings();
 #elif GTASA
@@ -1966,7 +1969,11 @@ public:
         int32_t numLines = _this->CostructStatLine(99999);
 #endif
 
+#ifdef GTASA
+        CFont::SetBackground(false, false);
+#else
         CFont::SetBackground(false);
+#endif
         CFont::SetProportional(true);
         CFont::SetDropShadowPosition(1);
         CFont::SetFontStyle(FONT_SUBTITLES);
@@ -2006,7 +2013,11 @@ public:
         CFont::PrintString(ScaleX(40.0f + GetMenuOffsetX()), ScaleY(crimRaY), TheText.Get("CRIMRA"));
 
         CFont::SetOrientation(ALIGN_RIGHT);
+#ifdef GTASA
+        CFont::PrintString(SCREEN_WIDTH - ScaleX(40.0f + GetMenuOffsetX()), ScaleY(crimRaY), plugin::FormatStatic("%ls (%d)", CStats::FindCriminalRatingString(), CStats::FindCriminalRatingNumber()));
+#else
         CFont::PrintString(SCREEN_WIDTH - ScaleX(40.0f + GetMenuOffsetX()), ScaleY(crimRaY), plugin::FormatStatic(L"%ls (%d)", CStats::FindCriminalRatingString(), CStats::FindCriminalRatingNumber()));
+#endif
     }
 
     static inline bool prefsDisplayOnFootInCar = false;
