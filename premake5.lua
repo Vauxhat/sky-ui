@@ -9,7 +9,7 @@ project "sky-ui"
 	objdir ("output/obj")
 	targetextension ".asi"
 	characterset ("MBCS")
-	linkoptions "/SAFESEH:NO"
+	linkoptions "/SAFESEH:NO /LTCG "
 	buildoptions { "-std:c++latest", "/permissive" }
 	defines { "_CRT_SECURE_NO_WARNINGS", "_CRT_NON_CONFORMING_SWPRINTFS", "_USE_MATH_DEFINES", "RW" }
 	disablewarnings { "4244", "4800", "4305", "4073", "4838", "4996", "4221", "4430", "26812", "26495", "6031" }
@@ -32,7 +32,9 @@ project "sky-ui"
 		includedirs {
 			"$(PLUGIN_SDK_DIR)/plugin_III/",
 			"$(PLUGIN_SDK_DIR)/plugin_III/game_III/",
-            "$(PLUGIN_SDK_DIR)/plugin_III/game_III/rw/",
+            "$(PLUGIN_SDK_DIR)/plugin_III/game_III/meta/",
+			"$(PLUGIN_SDK_DIR)/plugin_III/game_III/enums/",
+			"$(PLUGIN_SDK_DIR)/plugin_III/game_III/rw/",
 			"$(RWD3D9_DIR)/source"
 		}
 		targetname "SkyUI"
@@ -45,6 +47,8 @@ project "sky-ui"
 		includedirs {
 			"$(PLUGIN_SDK_DIR)/plugin_vc/",
 			"$(PLUGIN_SDK_DIR)/plugin_vc/game_vc/",
+			"$(PLUGIN_SDK_DIR)/plugin_vc/game_vc/meta/",
+			"$(PLUGIN_SDK_DIR)/plugin_vc/game_vc/enums/",
             "$(PLUGIN_SDK_DIR)/plugin_vc/game_vc/rw/",
 			"$(RWD3D9_DIR)/source"
 		}
@@ -58,6 +62,8 @@ project "sky-ui"
 		includedirs {
 			"$(PLUGIN_SDK_DIR)/plugin_sa/",
 			"$(PLUGIN_SDK_DIR)/plugin_sa/game_sa/",
+			"$(PLUGIN_SDK_DIR)/plugin_sa/game_sa/meta",
+			"$(PLUGIN_SDK_DIR)/plugin_sa/game_sa/enums",
             "$(PLUGIN_SDK_DIR)/plugin_sa/game_sa/rw"
 		}
 		targetname "SkyUI"
