@@ -64,6 +64,7 @@
 #pragma comment(lib, "shell32.lib")
 
 #include <algorithm>
+#include <string>
 
 #include "GInputAPI.h"
 
@@ -253,6 +254,11 @@ public:
 #define PAD_IV_CONTROLS_MODE (1)
 #else
 #define PAD_IV_CONTROLS_MODE (4)
+#endif
+
+#ifdef GTAVC
+    static inline CSprite2d *controllerSprite;
+    static inline CSprite2d *arrowSprite[4];
 #endif
 
 #if (defined(GTA3) && defined(LC01)) || defined(GTAVC)
@@ -1535,7 +1541,7 @@ public:
                 if (_this->m_nPrefsLanguage > 4)
                     _this->m_nPrefsLanguage = 0;
 
-#ifdef GTA3 || GTAVC
+#ifndef GTASA
                 _this->m_bFrontEnd_ReloadObrTxtGxt = true;
 #endif
 
@@ -2044,10 +2050,11 @@ public:
         y += ScaleY(90.0f);
 #endif
 
-        static std::string sprite = "fe_arrows1";
+        //static std::string sprite = "fe_arrows1";
 #ifndef GTASA
-        frontendSprites.GetSprite("fe_controller").Draw(CRect(x - halfw, y - halfh, x + halfw, y + halfh), col);
-        frontendSprites.GetSprite(sprite).Draw(CRect(x - halfw, y - halfh, x + halfw, y + halfh), col);
+        if (controllerSprite) {
+            controllerSprite->Draw(CRect(x - halfw, y - halfh, x + halfw, y + halfh), col);
+        }
 #else
         frontendSprites.GetSprite("CONTROLLER_PS2").Draw(CRect(x - halfw, y - halfh, x + halfw, y + halfh), col);
 #endif
@@ -2193,6 +2200,8 @@ public:
                 break;
         }
 #else
+        static int arrows = 0;
+
         switch (prefsConfigSetup) {
             case 0:
                 if (prefsDisplayOnFootInCar) {
@@ -2223,7 +2232,8 @@ public:
                     CFont::PrintString(x + ScaleX(122.0f), y + ScaleY(20.0f), textLoader.Get("FEC_SMT"));
                     CFont::PrintString(x + ScaleX(122.0f), y + ScaleY(30.0f), textLoader.Get("FEC_R3"));
 
-                    sprite = "fe_arrows2";
+                    //sprite = "fe_arrows2";
+                    arrows = 1;
                 }
                 else {
                     CFont::SetOrientation(ALIGN_RIGHT);
@@ -2246,7 +2256,8 @@ public:
                     CFont::PrintString(x + ScaleX(122.0f), y + ScaleY(20.0f), textLoader.Get("FEC_LB3"));
                     CFont::PrintString(x + ScaleX(122.0f), y + ScaleY(30.0f), textLoader.Get("FEC_R3"));
 
-                    sprite = "fe_arrows1";
+                    //sprite = "fe_arrows1";
+                    arrows = 0;
                 }
                 break;
             case 1:
@@ -2278,7 +2289,8 @@ public:
                     CFont::PrintString(x + ScaleX(122.0f), y + ScaleY(20.0f), textLoader.Get("FEC_SMT"));
                     CFont::PrintString(x + ScaleX(122.0f), y + ScaleY(30.0f), textLoader.Get("FEC_R3"));
 
-                    sprite = "fe_arrows4";
+                    //sprite = "fe_arrows4";
+                    arrows = 3;
                 }
                 else {
                     CFont::SetOrientation(ALIGN_RIGHT);
@@ -2301,7 +2313,8 @@ public:
                     CFont::PrintString(x + ScaleX(122.0f), y + ScaleY(20.0f), textLoader.Get("FEC_LB3"));
                     CFont::PrintString(x + ScaleX(122.0f), y + ScaleY(30.0f), textLoader.Get("FEC_R3"));
 
-                    sprite = "fe_arrows3";
+                    //sprite = "fe_arrows3";
+                    arrows = 2;
                 }
                 break;
             case 2:
@@ -2333,7 +2346,8 @@ public:
                     CFont::PrintString(x + ScaleX(122.0f), y + ScaleY(20.0f), textLoader.Get("FEC_SMT"));
                     CFont::PrintString(x + ScaleX(122.0f), y + ScaleY(30.0f), textLoader.Get("FEC_R3"));
 
-                    sprite = "fe_arrows2";
+                    //sprite = "fe_arrows2";
+                    arrows = 1;
                 }
                 else {
                     CFont::SetOrientation(ALIGN_RIGHT);
@@ -2356,7 +2370,8 @@ public:
                     CFont::PrintString(x + ScaleX(122.0f), y + ScaleY(20.0f), textLoader.Get("FEC_LB3"));
                     CFont::PrintString(x + ScaleX(122.0f), y + ScaleY(30.0f), textLoader.Get("FEC_R3"));
 
-                    sprite = "fe_arrows1";
+                    //sprite = "fe_arrows1";
+                    arrows = 0;
                 }
                 break;
             case 3:
@@ -2387,7 +2402,8 @@ public:
                     CFont::PrintString(x + ScaleX(122.0f), y + ScaleY(10.0f), textLoader.Get("FEC_ACC"));
                     CFont::PrintString(x + ScaleX(122.0f), y + ScaleY(20.0f), textLoader.Get("FEC_BRA"));
 
-                    sprite = "fe_arrows2";
+                    //sprite = "fe_arrows2";
+                    arrows = 1;
                 }
                 else {
                     CFont::SetOrientation(ALIGN_RIGHT);
@@ -2410,7 +2426,8 @@ public:
                     CFont::PrintString(x + ScaleX(122.0f), y + ScaleY(20.0f), textLoader.Get("FEC_LB3"));
                     CFont::PrintString(x + ScaleX(122.0f), y + ScaleY(30.0f), textLoader.Get("FEC_R3"));
 
-                    sprite = "fe_arrows1";
+                    //sprite = "fe_arrows1";
+                    arrows = 0;
                 }
                 break;
             case 4:
@@ -2441,7 +2458,8 @@ public:
                     CFont::PrintString(x + ScaleX(122.0f), y + ScaleY(20.0f), textLoader.Get("FEC_SMT"));
                     CFont::PrintString(x + ScaleX(122.0f), y + ScaleY(30.0f), textLoader.Get("FEC_R3"));
 
-                    sprite = "fe_arrows2";
+                    //sprite = "fe_arrows2";
+                    arrows = 1;
                 }
                 else {
                     CFont::SetOrientation(ALIGN_RIGHT);
@@ -2467,9 +2485,15 @@ public:
                     CFont::PrintString(x + ScaleX(122.0f), y + ScaleY(20.0f), textLoader.Get("FEC_LB3"));
                     CFont::PrintString(x + ScaleX(122.0f), y + ScaleY(30.0f), textLoader.Get("FEC_R3"));
 
-                    sprite = "fe_arrows1";
+                    //sprite = "fe_arrows1";
+                    arrows = 0;
                 }
                 break;
+        }
+
+        // Check if sprite exists before attempting to draw.
+        if (arrowSprite[arrows]) {
+            arrowSprite[arrows]->Draw(CRect(x - halfw, y - halfh, x + halfw, y + halfh), col);
         }
 #endif
     }
@@ -3416,7 +3440,17 @@ public:
 #endif
 
         frontendSprites.Clear();
-        frontendSprites.LoadAllSpritesFromFolder(PLUGIN_PATH("SkyUI\\frontend"));
+        //frontendSprites.LoadAllSpritesFromFolder(PLUGIN_PATH("SkyUI\\frontend"));
+
+#ifndef GTASA
+        if (frontendSprites.LoadAllSpritesFromFolder(PLUGIN_PATH("SkyUI\\frontend"))) {
+            controllerSprite = new CSprite2d(frontendSprites.GetSprite("fe_controller"));
+
+            for (int i = 0; i < 4; i++) {
+                arrowSprite[i] = new CSprite2d(frontendSprites.GetSprite("fe_arrows" + std::to_string(i + 1)));
+            }
+        }
+#endif
 
 #ifdef GTASA
         hudSprites.Clear();
@@ -3477,6 +3511,16 @@ public:
 #endif
 
         frontendSprites.Clear();
+
+#ifndef GTASA
+        delete controllerSprite;
+        controllerSprite = nullptr;
+
+        for (int i = 0; i < 4; i++) {
+            delete arrowSprite[i];
+            arrowSprite[i] = nullptr;
+        }
+#endif
 
 #ifdef GTASA
         hudSprites.Clear();
